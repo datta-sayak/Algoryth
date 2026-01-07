@@ -91,10 +91,17 @@ export default function Home() {
             </div>
 
             <div className="mt-4 grid gap-2 text-sm">
-              <span className="text-zinc-500 dark:text-zinc-400">Settings</span>
-              <span className="text-zinc-500 dark:text-zinc-400">Submissions</span>
-              <span className="text-zinc-500 dark:text-zinc-400">Contests</span>
-            </div>
+  <Link href="/settings" className="text-zinc-500 hover:underline">
+    Settings
+  </Link>
+  <Link href="/submissions" className="text-zinc-500 hover:underline">
+    Submissions
+  </Link>
+  <Link href="/contests" className="text-zinc-500 hover:underline">
+    Contests
+  </Link>
+</div>
+
           </div>
         </div>
       </aside>
