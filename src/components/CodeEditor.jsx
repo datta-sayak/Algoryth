@@ -66,7 +66,7 @@ export default function CodeEditor({
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-black/10 bg-amber-50 dark:border-white/10 dark:bg-black">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-black/10 bg-amber-50 dark:border-white/10 dark:bg-zinc-900">
       <div className="border-b border-black/10 bg-amber-100 px-5 py-3 dark:border-white/10 dark:bg-zinc-950">
         <div className="flex items-center justify-between gap-3">
           <div className="text-sm font-semibold">Code</div>

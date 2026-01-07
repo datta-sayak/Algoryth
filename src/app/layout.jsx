@@ -20,7 +20,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark:bg-black">
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-amber-50 text-zinc-900 antialiased dark:bg-black dark:text-zinc-50`}
       >
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
-        <header className="sticky top-0 z-20 border-b border-black/10 bg-amber-50/90 backdrop-blur dark:border-white/10 dark:bg-black/80">
+        <header className="sticky top-0 z-20 border-b border-black/10 bg-amber-50/90 backdrop-blur dark:border-white/10 dark:bg-black">
           <div className="mx-auto w-full max-w-7xl px-6">
             <div className="flex items-center gap-4 py-3">
               <Link href="/" className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 pb-3 text-xs font-semibold uppercase tracking-wide">
+            <div className="flex items-center gap-2 pb-3 text-xs font-semibold uppercase tracking-wide dark:bg-black">
               <Link
                 href="/"
                 className="rounded-full px-3 py-2 text-zinc-700 hover:bg-amber-100 dark:text-zinc-300 dark:hover:bg-white/10"
@@ -89,10 +89,10 @@ export default function RootLayout({ children }) {
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl px-6 py-8">{children}</main>
+        <main className="mx-auto w-full max-w-7xl px-6 py-8 dark:bg-black">{children}</main>
 
-        <footer className="border-t border-black/10 dark:border-white/10">
-          <div className="mx-auto w-full max-w-7xl px-6 py-6 text-sm text-zinc-600 dark:text-zinc-400">
+        <footer className="border-t border-black/10 dark:border-white/10 dark:bg-black">
+          <div className="mx-auto w-full max-w-7xl px-6 py-6 text-sm text-zinc-600 dark:text-zinc-400 dark:bg-black">
             Algoryth · {new Date().getFullYear()}
           </div>
         </footer>

@@ -2,10 +2,10 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <section className="grid gap-6 lg:grid-cols-[1fr_340px]">
-      <div className="grid gap-4">
-        <div className="overflow-hidden rounded-2xl border border-black/10 bg-amber-50 dark:border-white/10 dark:bg-black">
-          <div className="border-b border-black/10 bg-amber-100 px-6 py-4 dark:border-white/10 dark:bg-black">
+    <section className="grid gap-6 lg:grid-cols-[1fr_340px] dark:bg-black">
+      <div className="grid gap-4 dark:bg-black">
+        <div className="overflow-hidden rounded-2xl border border-black/10 bg-amber-50 dark:border-white/10 dark:bg-zinc-900">
+          <div className="border-b border-black/10 bg-amber-100 px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
             <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Announcement
             </div>
@@ -28,8 +28,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-black/10 bg-amber-50 dark:border-white/10 dark:bg-black">
-          <div className="border-b border-black/10 bg-amber-100 px-6 py-4 dark:border-white/10 dark:bg-black">
+        <div className="overflow-hidden rounded-2xl border border-black/10 bg-amber-50 dark:border-white/10 dark:bg-zinc-900">
+          <div className="border-b border-black/10 bg-amber-100 px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
             <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Quick start
             </div>
@@ -57,7 +57,7 @@ export default function Home() {
         </div>
       </div>
 
-      <aside className="grid gap-4">
+      <aside className="grid gap-4 dark:bg-black">
         <div className="overflow-hidden rounded-2xl border border-black/10 bg-amber-50 dark:border-white/10 dark:bg-black">
           <div className="border-b border-black/10 bg-amber-100 px-5 py-4 dark:border-white/10 dark:bg-black">
             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Pay attention</div>
@@ -69,7 +69,7 @@ export default function Home() {
             </div>
             <button
               type="button"
-              className="mt-4 inline-flex h-9 items-center justify-center rounded-full border border-black/10 bg-amber-50 px-4 text-sm font-medium text-zinc-700 hover:bg-amber-200 dark:border-white/10 dark:bg-black dark:text-zinc-200 dark:hover:bg-white/10"
+              className="mt-4 inline-flex h-9 items-center justify-center rounded-full border border-black/10 bg-amber-50 px-4 text-sm font-medium text-zinc-700 hover:bg-amber-200 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-white/10"
             >
               Register (soon)
             </button>
