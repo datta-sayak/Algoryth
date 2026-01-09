@@ -12,6 +12,8 @@ export default function CodeEditor({
   initialLanguage = "javascript",
   onChange,
   onLanguageChange,
+  onRun,      
+  onSubmit, 
 }) {
   const [code, setCode] = useState(initialCode || "");
   const [language, setLanguage] = useState(initialLanguage);
@@ -118,6 +120,23 @@ export default function CodeEditor({
             >
               {isFormatting ? "Formatting..." : "Auto"}
             </button>
+
+            {/* Adding Run and Submit buttons */}
+            <button
+              type="button"
+              className="inline-flex h-9 items-center justify-center rounded-full border bg-white px-4 text-xs font-semibold hover:bg-[#f6e9d2] dark:border dark:bg-[#221d2b] dark:hover:bg-[#2d2535]"
+              onClick={() => onRun?.()}
+            >
+              Run
+            </button>
+
+            <button
+              type="button"
+              className="inline-flex h-9 items-center justify-center rounded-full border bg-white px-4 text-xs font-semibold hover:bg-[#f6e9d2] dark:border dark:bg-[#221d2b] dark:hover:bg-[#2d2535]"
+              onClick={() => onSubmit?.()}
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>
@@ -128,7 +147,11 @@ export default function CodeEditor({
           theme={theme}
           language={language}
           value={code}
-          onChange={(v) => setCode(v ?? "")}
+          onChange={(v) => {
+            const newCode = v ?? "";
+            setCode(newCode);
+            onChange?.(newCode);
+          }}
           options={editorOptions}
         />
       </div>

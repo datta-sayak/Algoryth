@@ -49,8 +49,8 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           problemId: problem.id,
-          code: code || starterCode,
-          status: "Accepted",
+
+          status: "Accepted", // Mock accepted
         }),
       });
 
@@ -67,6 +67,7 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
   /* ---------------- LEFT PANEL (UNCHANGED) ---------------- */
   const leftPanel = (
     <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-[#e0d5c2] bg-[#fff8ed] dark:border-[#3c3347] dark:bg-[#211d27]">
+      {/* Problem header, tags, description, constraints, examples */}
       <div className="border-b border-[#e0d5c2] bg-[#f2e3cc] px-5 py-4 dark:border-[#3c3347] dark:bg-[#292331]">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -80,32 +81,6 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
           <span className="inline-flex items-center rounded-full border border-[#deceb7] bg-[#f2e3cc] px-3 py-1 text-xs font-medium text-[#5d5245] dark:border-[#40364f] dark:bg-[#221d2b] dark:text-[#d7ccbe]">
             {problem.difficulty}
           </span>
-        </div>
-
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
-          <span className="inline-flex items-center rounded-full bg-[#edd9b8] px-4 py-2 text-xs font-semibold text-[#4b4033] dark:bg-[#f6ede0] dark:text-[#231406]">
-            Description
-          </span>
-          <span className="inline-flex items-center rounded-full border border-[#deceb7] px-4 py-2 text-xs font-semibold text-[#8a7a67] dark:border-[#40364f] dark:text-[#b5a59c]">
-            Editorial
-          </span>
-          <span className="inline-flex items-center rounded-full border border-[#deceb7] px-4 py-2 text-xs font-semibold text-[#8a7a67] dark:border-[#40364f] dark:text-[#b5a59c]">
-            Solutions
-          </span>
-          <span className="inline-flex items-center rounded-full border border-[#deceb7] px-4 py-2 text-xs font-semibold text-[#8a7a67] dark:border-[#40364f] dark:text-[#b5a59c]">
-            Submissions
-          </span>
-        </div>
-
-        <div className="mt-3 flex flex-wrap gap-2">
-          {problem.tags.map((t) => (
-            <span
-              key={`${problem.id}-${t}`}
-              className="inline-flex items-center rounded-full border border-[#deceb7] bg-[#f2e3cc] px-3 py-1 text-xs text-[#5d5245] dark:border-[#40364f] dark:bg-[#2d2535] dark:text-[#d7ccbe]"
-            >
-              {t}
-            </span>
-          ))}
         </div>
       </div>
 
@@ -135,13 +110,17 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
               <div className="font-medium text-[#2b2116] dark:text-[#f6ede0]">
                 Input
               </div>
-              <pre className="mt-1 whitespace-pre-wrap">
+
+              <pre className="mt-1 overflow-auto whitespace-pre-wrap text-[#5d5245] dark:text-[#d7ccbe]">
+
                 {ex.input}
               </pre>
               <div className="mt-3 font-medium text-[#2b2116] dark:text-[#f6ede0]">
                 Output
               </div>
-              <pre className="mt-1 whitespace-pre-wrap">
+
+              <pre className="mt-1 overflow-auto whitespace-pre-wrap text-[#5d5245] dark:text-[#d7ccbe]">
+
                 {ex.output}
               </pre>
             </div>
@@ -166,6 +145,9 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
           initialCode={code || starterCode}
           onChange={setCode}
           onLanguageChange={setLanguage}
+
+          onRun={handleRun}        // ✅ added
+          onSubmit={handleSubmit}  // ✅ added
         />
       }
       secondary={
@@ -186,22 +168,23 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
       {/* HEADER */}
       <div className="flex items-center justify-between gap-3 rounded-2xl border bg-[#fff8ed] px-4 py-3 dark:bg-[#211d27]">
         <div className="flex items-center gap-2">
-          <Link href="/problems">Problems</Link>
+<Link href="/problems">Problems</Link>
 
-          <button onClick={onPrev} disabled={!onPrev}>{"<"}</button>
-          <button onClick={onNext} disabled={!onNext}>{">"}</button>
+<button onClick={onPrev} disabled={!onPrev}>{"<"}</button>
+<button onClick={onNext} disabled={!onNext}>{">"}</button>
 
-          <ProblemTimer running={timerRunning} />
-        </div>
+<ProblemTimer running={timerRunning} />
+</div>
 
-        <div className="flex items-center gap-2">
-          <button onClick={handleRun} disabled={isRunning || isSubmitting}>
-            {isRunning ? "Running..." : "Run"}
-          </button>
-          <button onClick={handleSubmit} disabled={isRunning || isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit"}
-          </button>
-        </div>
+<div className="flex items-center gap-2">
+  <button onClick={handleRun} disabled={isRunning || isSubmitting}>
+    {isRunning ? "Running..." : "Run"}
+  </button>
+  <button onClick={handleSubmit} disabled={isRunning || isSubmitting}>
+    {isSubmitting ? "Submitting..." : "Submit"}
+  </button>
+</div>
+
       </div>
 
       <div className="hidden lg:block h-225">
