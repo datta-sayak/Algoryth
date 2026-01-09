@@ -113,6 +113,12 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
               <pre className="mt-1 overflow-auto whitespace-pre-wrap text-[#5d5245] dark:text-[#d7ccbe]">
                 {ex.output}
               </pre>
+              <div className="mt-3 font-medium text-[#2b2116] dark:text-[#f6ede0]">
+                Explaination
+              </div>
+              <pre className="mt-1 overflow-auto whitespace-pre-wrap text-[#5d5245] dark:text-[#d7ccbe]">
+                {ex.explaination}
+              </pre>
             </div>
           ))}
         </div>
