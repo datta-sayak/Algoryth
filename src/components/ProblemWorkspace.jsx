@@ -16,11 +16,9 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
   const [inputError, setInputError] = useState(null);
 
   const starterCode = useMemo(
-    () =>
-      `// ${problem.title}\n\nfunction solve(input) {\n  // TODO\n}\n`,
+    () => `// ${problem.title}\n\nfunction solve(input) {\n  // TODO\n}\n`,
     [problem.title]
   );
-
 
   const isCodeEmpty =
     !code || code.trim().length === 0 || code.trim() === starterCode.trim();
@@ -35,7 +33,6 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
     setInputError(null);
     return true;
   };
-
 
   const handleRun = async () => {
     if (!validateBeforeRun()) return;
@@ -61,7 +58,7 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
   const handleSubmit = async () => {
     if (!validateBeforeRun()) return;
 
-    setTimerRunning(false); 
+    setTimerRunning(false);
     setIsSubmitting(true);
     setLastSubmissionStatus(null);
 
@@ -72,20 +69,18 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
         body: JSON.stringify({
           problemId: problem.id,
           code,
+
           status: "Accepted", // mock
         }),
       });
 
-      setLastSubmissionStatus(
-        response.ok ? "Accepted" : "Wrong Answer"
-      );
+      setLastSubmissionStatus(response.ok ? "Accepted" : "Wrong Answer");
     } catch {
       setLastSubmissionStatus("Submission Error");
     }
 
     setIsSubmitting(false);
   };
-
 
   const leftPanel = (
     <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-[#e0d5c2] bg-[#fff8ed] dark:border-[#3c3347] dark:bg-[#211d27]">
@@ -102,6 +97,17 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
           <span className="inline-flex items-center rounded-full border border-[#deceb7] bg-[#f2e3cc] px-3 py-1 text-xs font-medium text-[#5d5245] dark:border-[#40364f] dark:bg-[#221d2b] dark:text-[#d7ccbe]">
             {problem.difficulty}
           </span>
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          {problem.tags.map((t) => (
+            <span
+              key={`${problem.id}-${t}`}
+              className="inline-flex items-center rounded-full border border-[#deceb7] bg-[#f2e3cc] px-3 py-1 text-xs text-[#5d5245] dark:border-[#40364f] dark:bg-[#2d2535] dark:text-[#d7ccbe]"
+            >
+              {t}
+            </span>
+          ))}
         </div>
       </div>
 
@@ -148,7 +154,6 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
     </div>
   );
 
-
   const rightPanel = (
     <SplitPane
       direction="vertical"
@@ -168,8 +173,8 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
           onLanguageChange={setLanguage}
           onRun={handleRun}
           onSubmit={handleSubmit}
-          runDisabled={isRunning || isCodeEmpty}
-          submitDisabled={isSubmitting || isCodeEmpty}
+          isRunning={isRunning}
+          isSubmitting={isSubmitting}
         />
       }
       secondary={
@@ -191,7 +196,6 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
     />
   );
 
-
   return (
     <section className="grid gap-4">
       <div className="flex items-center justify-between rounded-2xl border border-[#e0d5c2] bg-[#fff8ed] px-4 py-3 dark:border-[#3c3347] dark:bg-[#211d27]">
@@ -202,6 +206,7 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
           >
             Problems
           </Link>
+
           <button onClick={onPrev} disabled={!onPrev}>{"<"}</button>
           <button onClick={onNext} disabled={!onNext}>{">"}</button>
 
