@@ -72,6 +72,7 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
         body: JSON.stringify({
           problemId: problem.id,
           code,
+
           status: "Accepted", // mock
         }),
       });
