@@ -16,14 +16,8 @@ export async function POST(request) {
 
     try {
       // User must define solve(input)
-      const solve = new Function(
-        `${code}; return solve;`
-      )();
-
-      const parsedInput =
-        input !== undefined ? JSON.parse(input) : undefined;
-
-      output = solve(parsedInput);
+      const solve = new Function(`${code}; return solve;`)();
+      output = solve(input ? JSON.parse(input) : undefined);
     } catch (err) {
       error = err.toString();
     }
