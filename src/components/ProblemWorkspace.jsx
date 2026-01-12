@@ -12,7 +12,7 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
   const [language, setLanguage] = useState("javascript");
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [lastSubmissionStatus, setLastSubmissionStatus] = useState(null);
+  const [executionResult, setExecutionResult] = useState(null);
   const [timerRunning, setTimerRunning] = useState(true);
   const [inputError, setInputError] = useState(null);
   const [openHints, setOpenHints] = useState([]);
@@ -108,11 +108,18 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
     const { builtInput, builtType } = buildCurrentInput();
 
     try {
+      // Parse test cases from problem examples
+      const testCases = problem.examples.map((ex) => ({
+        input: ex.input,
+        expectedOutput: ex.output,
+      }));
+
       const response = await fetch("/api/execute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, language, input: builtInput, inputType: builtType }),
       });
+
       const result = await response.json();
       setLastSubmissionStatus(`${result.status} in ${result.language}`);
       if (result.visualization) setLastVisualization(result.visualization);
@@ -128,23 +135,44 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
 
     setTimerRunning(false);
     setIsSubmitting(true);
-    setLastSubmissionStatus(null);
+    setExecutionResult(null);
 
     try {
-      const response = await fetch("/api/submissions", {
+      // Parse test cases from problem examples
+      const testCases = problem.examples.map((ex) => ({
+        input: ex.input,
+        expectedOutput: ex.output,
+      }));
+
+      const response = await fetch("/api/execute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          problemId: problem.id,
           code,
-
-          status: "Accepted", // mock
+          language,
+          testCases,
+          problemId: problem.id,
         }),
       });
 
-      setLastSubmissionStatus(response.ok ? "Accepted" : "Wrong Answer");
-    } catch {
-      setLastSubmissionStatus("Submission Error");
+      const result = await response.json();
+
+      if (!response.ok) {
+        setExecutionResult({
+          status: "Error",
+          error: result.error || "Submission failed",
+        });
+      } else {
+        setExecutionResult({
+          ...result,
+          isSubmission: true,
+        });
+      }
+    } catch (error) {
+      setExecutionResult({
+        status: "Error",
+        error: "Network error: Could not connect to submission server",
+      });
     }
 
     setIsSubmitting(false);

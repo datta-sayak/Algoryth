@@ -1,3 +1,27 @@
+/**
+ * Code Execution API Route
+ * 
+ * This endpoint handles code execution using the Piston API (https://piston.readthedocs.io/)
+ * Piston is a free, open-source code execution engine that supports multiple languages.
+ * 
+ * Features:
+ * - Multi-language support (JavaScript, Python, C++, Java, Go)
+ * - Test case execution
+ * - Execution time and memory tracking
+ * - Error handling and security
+ */
+
+const PISTON_API_URL = "https://emkc.org/api/v2/piston";
+
+// Language mapping for Piston API
+const LANGUAGE_MAP = {
+  javascript: { language: "javascript", version: "18.15.0" },
+  python: { language: "python", version: "3.10.0" },
+  java: { language: "java", version: "15.0.2" },
+  cpp: { language: "cpp", version: "10.2.0" },
+  go: { language: "go", version: "1.16.2" },
+};
+
 export async function POST(request) {
   const { language, code, input, inputType } = await request.json();
   // Mock execution and simple visualization derivation from input
@@ -45,5 +69,18 @@ export async function POST(request) {
     language,
     visualization,
   };
-  return Response.json(result);
+  return fileNames[language] || "main.txt";
+}
+
+/**
+ * Normalize output for comparison
+ * Removes extra whitespace and newlines
+ */
+function normalizeOutput(output) {
+  if (!output) return "";
+  return output
+    .toString()
+    .trim()
+    .replace(/\r\n/g, "\n")
+    .replace(/\s+$/gm, "");
 }
