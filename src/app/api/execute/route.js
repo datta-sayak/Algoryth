@@ -1,26 +1,4 @@
-/**
- * Code Execution API Route
- * 
- * This endpoint handles code execution using the Piston API (https://piston.readthedocs.io/)
- * Piston is a free, open-source code execution engine that supports multiple languages.
- * 
- * Features:
- * - Multi-language support (JavaScript, Python, C++, Java, Go)
- * - Test case execution
- * - Execution time and memory tracking
- * - Error handling and security
- */
-
-const PISTON_API_URL = "https://emkc.org/api/v2/piston";
-
-// Language mapping for Piston API
-const LANGUAGE_MAP = {
-  javascript: { language: "javascript", version: "18.15.0" },
-  python: { language: "python", version: "3.10.0" },
-  java: { language: "java", version: "15.0.2" },
-  cpp: { language: "cpp", version: "10.2.0" },
-  go: { language: "go", version: "1.16.2" },
-};
+import { NextResponse } from "next/server";
 
 export async function POST(request) {
   const { language, code, input, inputType } = await request.json();
@@ -83,4 +61,36 @@ function normalizeOutput(output) {
     .trim()
     .replace(/\r\n/g, "\n")
     .replace(/\s+$/gm, "");
+}
+  try {
+    const { code, input } = await request.json();
+
+    if (!code || code.trim().length === 0) {
+      return NextResponse.json(
+        { error: "No code provided" },
+        { status: 400 }
+      );
+    }
+
+    let output = null;
+    let error = null;
+
+    try {
+      // User must define solve(input)
+      const solve = new Function(`${code}; return solve;`)();
+      output = solve(input ? JSON.parse(input) : undefined);
+    } catch (err) {
+      error = err.toString();
+    }
+
+    return NextResponse.json({
+      output,
+      error,
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request" },
+      { status: 400 }
+    );
+  }
 }
