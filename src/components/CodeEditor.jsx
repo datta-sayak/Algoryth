@@ -23,6 +23,44 @@ export default function CodeEditor({
   const [theme, setTheme] = useState("vs-dark");
   const [isFormatting, setIsFormatting] = useState(false);
 
+  /* ---------------- File upload ---------------- */
+  const handleFileUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    const languageMap = {
+      'js': 'javascript',
+      'ts': 'javascript',
+      'py': 'python',
+      'java': 'java',
+      'cpp': 'cpp',
+      'cc': 'cpp',
+      'cxx': 'cpp',
+      'c': 'cpp',
+      'go': 'go',
+    };
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result;
+      if (typeof content === 'string') {
+        setCode(content);
+        onChange?.(content);
+        
+        // set language
+        if (extension && languageMap[extension]) {
+          const detectedLanguage = languageMap[extension];
+          setLanguage(detectedLanguage);
+          onLanguageChange?.(detectedLanguage);
+        }
+      }
+    };
+    reader.readAsText(file);
+    // reseting the event value
+    event.target.value = '';
+  };
+
   /* ---------------- Sync initial code ---------------- */
   useEffect(() => {
     setCode(initialCode || "");
@@ -151,6 +189,22 @@ export default function CodeEditor({
               <option value="cpp">C++</option>
               <option value="go">Go</option>
             </select>
+
+            {/* Upload file */}
+            <label
+              htmlFor="code-file-upload"
+              className="inline-flex h-9 items-center justify-center rounded-full border border-[#deceb7] bg-white px-4 text-xs font-semibold text-[#5d5245] hover:bg-[#f6e9d2] cursor-pointer dark:border-[#40364f] dark:bg-[#221d2b] dark:text-[#d7ccbe] dark:hover:bg-[#2d2535]"
+              title="Upload code file"
+            >
+              Upload
+            </label>
+            <input
+              id="code-file-upload"
+              type="file"
+              accept=".js,.ts,.py,.java,.cpp,.c,.cc,.cxx,.go"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
 
             {/* Auto format */}
             <button
