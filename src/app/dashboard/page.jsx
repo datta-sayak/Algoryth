@@ -9,24 +9,80 @@ import Link from 'next/link';
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const [submissions, setSubmissions] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('algoryth_submissions');
-      const parsed = raw ? JSON.parse(raw) : [];
-      if (Array.isArray(parsed)) setSubmissions(parsed);
-    } catch (e) {
-      console.error('Failed to load submissions', e);
-    } finally {
-      setLoading(false);
+    const fetchSubmissions = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Get token from localStorage
+        const token = localStorage.getItem('algoryth_token');
+        if (!token) {
+          // No token, try to load from localStorage as fallback
+          const raw = localStorage.getItem('algoryth_submissions');
+          const parsed = raw ? JSON.parse(raw) : [];
+          setSubmissions(Array.isArray(parsed) ? parsed : []);
+          setLoading(false);
+          return;
+        }
+
+        // Fetch from server API
+        const response = await fetch('/api/submissions/history?limit=20', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch submissions: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setSubmissions(data.submissions || []);
+        setStats(data.stats || {});
+      } catch (e) {
+        console.error('Failed to fetch submissions from server:', e);
+        setError('Failed to load submissions');
+
+        // Fallback to localStorage
+        try {
+          const raw = localStorage.getItem('algoryth_submissions');
+          const parsed = raw ? JSON.parse(raw) : [];
+          if (Array.isArray(parsed)) setSubmissions(parsed);
+        } catch (fallbackError) {
+          console.error('Fallback to localStorage also failed:', fallbackError);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!authLoading) {
+      fetchSubmissions();
     }
-  }, []);
+  }, [authLoading]);
 
   if (authLoading || loading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#d69a44] border-t-transparent dark:border-[#f2c66f]"></div>
+      </div>
+    );
+  }
+
+  if (error && !submissions.length) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 dark:text-red-400">{error}</p>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Using local data from your browser
+          </p>
+        </div>
       </div>
     );
   }
@@ -42,7 +98,11 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <DashboardStats submissions={submissions} />
+      {stats ? (
+        <DashboardStats stats={stats} />
+      ) : (
+        <DashboardStats submissions={submissions} />
+      )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
         {/* Recent Activity List */}
@@ -64,9 +124,9 @@ export default function DashboardPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                        <span className={`text-xs font-bold ${
-                        s.status === 'Accepted' ? 'text-green-600 dark:text-green-400' : 'text-red-500'
+                        (s.verdict || s.status) === 'Accepted' ? 'text-green-600 dark:text-green-400' : 'text-red-500'
                       }`}>
-                        {s.status === 'Accepted' ? '✓' : '✗'}
+                        {(s.verdict || s.status) === 'Accepted' ? '✓' : '✗'}
                       </span>
                       <h4 className="text-sm font-medium text-[#2b2116] dark:text-[#f6ede0] truncate">
                         {s.problemTitle}
@@ -75,11 +135,11 @@ export default function DashboardPage() {
                     <div className="mt-1 flex items-center gap-3 text-xs text-[#8a7a67] dark:text-[#b5a59c]">
                       <span className="capitalize">{s.language}</span>
                       <span>•</span>
-                      <span>{new Date(s.timestamp).toLocaleDateString()}</span>
+                      <span>{new Date(s.submittedAt || s.timestamp).toLocaleDateString()}</span>
                     </div>
                   </div>
                   <Link 
-                    href={`/problems/${s.problemId?.replace('p-', '') || ''}`}
+                    href={`/problems/${(s.problemSlug || s.problemId || '').replace('p-', '')}`}
                     className="ml-4 p-2 rounded-full hover:bg-[#f2e3cc] dark:hover:bg-[#3c3347] text-[#8a7a67] dark:text-[#b5a59c]"
                   >
                     <ExternalLink className="h-4 w-4" />
