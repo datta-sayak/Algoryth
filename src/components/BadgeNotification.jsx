@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sparkles } from 'lucide-react';
 
@@ -161,13 +161,13 @@ export default function BadgeNotification({ badges = [], onDismiss }) {
  * Shows celebration confetti when badge is earned
  */
 function Confetti({ emit }) {
-  const particles = Array.from({ length: 30 }).map((_, i) => ({
+  const particles = useMemo(() => Array.from({ length: 30 }).map((_, i) => ({
     id: i,
     left: Math.random() * 100,
     delay: Math.random() * 0.3,
     duration: 2 + Math.random() * 1,
     xOffset: (Math.random() - 0.5) * 100,
-  }));
+  })), []);
 
   if (!emit) return null;
 

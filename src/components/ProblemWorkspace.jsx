@@ -276,7 +276,7 @@ export default function ProblemWorkspace({ problem, onNext, onPrev }) {
              {[1, 2, 3].map((i) => (
                <div key={i} className="cursor-pointer rounded-lg border border-[#e0d5c2] bg-white p-4 transition-all hover:shadow-sm dark:border-[#3c3347] dark:bg-[#211d27]">
                  <div className="flex items-center gap-3">
-                   className="h-8 w-8 rounded-full bg-linear-to-br from-blue-400 to-purple-500" />
+                   <div className="h-8 w-8 rounded-full bg-linear-to-br from-blue-400 to-purple-500" />
                    <div>
                      <div className="text-sm font-medium text-[#2b2116] dark:text-[#f6ede0]">User_{100+i}</div>
                      <div className="text-xs text-[#8a7a67] dark:text-[#b5a59c]">JavaScript • 2ms • 45MB</div>

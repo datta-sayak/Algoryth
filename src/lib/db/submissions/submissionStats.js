@@ -1,6 +1,5 @@
 import { connectToDatabase } from '../connect';
 import Submission from '../models/Submission';
-import User from '../models/User';
 
 /**
  * Check if a submission has the fastest execution time for a problem
